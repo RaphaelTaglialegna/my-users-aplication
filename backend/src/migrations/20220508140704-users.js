@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('users', {
@@ -11,18 +12,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         field: 'user_name',
-
       },
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        field: 'last_name',
-
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
-
     });
   },
   down: async (queryInterface, _Sequelize) => {

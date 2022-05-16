@@ -6,7 +6,7 @@ const config = {
     password: process.env.DB_PASS,
     database: 'users_testapp_db',
     host: process.env.DB_HOST,
-    port: Number(process.env.PORT) || 5432,
+    port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
     dialectOptions: {
         timezone: 'Z',
