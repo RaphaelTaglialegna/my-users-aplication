@@ -1,9 +1,9 @@
 import * as express from 'express';
-import LoginController from '../controllers/loginController';
+import UserController from '../controllers/UserController';
 
 const routerUsers = express.Router();
-const usersController = new LoginController();
+const userController = new UserController();
 
-routerUsers.get('/', userController.loginValidate);
+routerUsers.get('/', userController.getAll);
 
 export default routerUsers;
