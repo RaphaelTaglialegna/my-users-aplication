@@ -1,14 +1,20 @@
-Teste Prático - Desenvolvedor Full Stack Júnior
+## Teste Prático - Desenvolvedor Full Stack Júnior
 
-Descrição do Problema:
+### Descrição do Problema:
 [] - Banco de dados - PostgreSQL
+
 [] - USER - Name / Password / Email
+
 [] - CRUD USER 
-[] - ORM Usado Sequelize
+
+[x] - ORM Usado Sequelize
+
 [] - Paginação
+
 [] - Filtro
-[] Express
-[] Typescript
+
+[x] Typescript
+
 
 
 Inicialmente, é necessário desenvolver uma aplicação Back-end que irá

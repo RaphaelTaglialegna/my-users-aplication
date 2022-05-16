@@ -1,0 +1,22 @@
+{
+  "name": "my-users-aplication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compose:up": "(docker-compose up -d --build)",
+    "compose:down": "(docker-compose down --remove-orphans)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaphaelTaglialegna/my-users-aplication.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RaphaelTaglialegna/my-users-aplication/issues"
+  },
+  "homepage": "https://github.com/RaphaelTaglialegna/my-users-aplication#readme"
+}
