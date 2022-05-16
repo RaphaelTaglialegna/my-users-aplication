@@ -1,14 +1,33 @@
 import * as express from 'express';
-import { Request, Response } from 'express';
+import routerUsers from './routes/UserRoute';
+class App {
+  public app: express.Express;
 
-import { StatusCodes } from 'http-status-codes';
+  constructor() {
+    this.app = express();
+    this.config();
+  }
 
-const app = express();
-app.use(express.json());
+  private config():void {
+    const accessControl: express.RequestHandler = (_req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
+      res.header('Access-Control-Allow-Headers', '*');
+      next();
+    };
+    
+    this.app.use(express.json());
+    this.app.use(accessControl);
+    this.app.use('/users', routerUsers);
+    
+  }
+  public start(PORT: string | number):void {
+    this.app.listen(PORT, () => console.log('Listening at port', PORT));
+  }
+  
+}
 
+export { App };
 
-app.get('/', (req: Request, res: Response) => {
-  res.status(StatusCodes.OK).send('Express + TypeScript')
-});
-
-export default app;
+// A execução dos testes de cobertura depende dessa exportação
+export const { app } = new App();
