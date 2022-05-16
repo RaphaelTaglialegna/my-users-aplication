@@ -1,42 +1,31 @@
 version: '3.9'
 services:
   backend:
-    container_name: users_backend
+    container_name: backendapi
     build: ./backend
     ports:
       - 3001:3001
-    # ...
-    depends_on:
-      db:
-        condition: service_healthy
+    
     environment:
       - PORT=3001
-      # Os dados abaixo se referem ao container `db`
-      # Dica: Relembre aqui da comunicação interna entre containers
-      - DB_USER=usersRoot
+      - DB_USER=root
       - DB_PASS=@12345Db
       - DB_HOST=postgredb
       - DB_NAME=users_testapp_db
       - DB_PORT=5432
-    healthcheck:
-      test: ["CMD", "lsof", "-t", "-i:3001"] # Caso utilize outra porta interna para o back, altere ela aqui também
-      timeout: 10s
-      retries: 5
+    
   db:
-    image: postgres:14-alpine
+    image: postgres:14
     container_name: postgredb
-    ports:
-      - 5432:5432/tcp
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    
     environment: 
-      - POSTGRES_PASSWORD=@12345Db
-      - POSTGRES_USER=usersRoot
+      - POSTGRES_USER=root
       - POSTGRES_DB=users_testapp_db
+      - POSTGRES_PASSWORD=@12345Db
+      - POSTGRES_HOST_AUTH_METHOD=trust
     restart: 'always'
-    healthcheck:
-      test: ["CMD", "postgresadmin" ,"ping", "-h", "localhost"] # Deve aguardar o banco ficar operacional
-      timeout: 10s
-      retries: 5
-    cap_add:
-      - SYS_NICE # Deve omitir alertas menores
+   
