@@ -6,92 +6,86 @@ import { app } from '../src/app';
 
 import Users from '../src/models/Users';
 import { Response } from 'superagent';
-import usersData from './Mocks/databaseMock';
-import userData from './Mocks/contactByIdMock';
+
+import
+ {
+  requestUserValid,
+  requestValidateName,
+  requestValidateEmail,
+  requestValidatePassword
+  } from './Mocks/requests'
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
+const ID = 3 as number;
 
-describe('Testes de Integração da API Users', () => {
+
+describe('Testes de Integração da API Users Requisições do Tipo POST', () => {
   let chaiHttpResponse: Response;
 
-  describe('1- Requisição do tipo `GET` para a rota `/users` para buscar todos os usurários cadastrados.', async () => {
-    before(async () => {
-      sinon
-        .stub(Users, 'findAll')
-        .resolves(usersData as unknown as Users[]);
-    });
+  describe('1- Requisição do tipo `POST` para a rota `/users` para cadastrar um usário com sucesso.', () => {
+    before(async () => sinon
+      .stub(Users, 'create')
+      .resolves( ID  as unknown as Users));
     
     after(() => {
-      (Users.findAll as sinon.SinonStub).restore();
+      (Users.create as sinon.SinonStub).restore();
     });
     
-    it('Espera no corpo da resposta STATUS 200', async () => {
-      chaiHttpResponse = await chai.request(app).get('/users');
+    it('Espera no corpo da resposta STATUS 201', async () => {
+      chaiHttpResponse = await chai.request(app).post('/users').send(requestUserValid);
 
-      expect(chaiHttpResponse.status).to.be.equal(200);
+      expect(chaiHttpResponse.status).to.be.equal(201);
     });
     
-    it('Espera que tenha os campos id, username e email', async() => {
-      chaiHttpResponse = await chai.request(app).get('/users');
-
-      expect(chaiHttpResponse.body[0]).to.have.own.property('id');
-      expect(chaiHttpResponse.body[0]).to.have.own.property('username');
-      expect(chaiHttpResponse.body[0]).to.have.own.property('email');
-      expect(chaiHttpResponse.body[0]).not.have.own.property('password');
-
+    it('Espera um retorno do usuário cadastrado e seu respectivo ID".', async () => {
+      chaiHttpResponse = await chai.request(app).post('/users').send(requestUserValid);
+      
+      (chaiHttpResponse.body).to.be.an('object').deep.equal({ id: ID, ...requestUserValid});
     }); 
+    
   });
 
-  describe('2- Requisição do tipo `GET` para a rota `/users/id` para buscar o usuário correspondente ao ID da requisição.', async () => {
-    
-    before(async () => {
-      sinon
-      .stub(Users, 'findByPk')
-      .resolves(userData as unknown as Users);
+  describe('3-Validações dos campos "username, email e password"', () => {
+    describe('Requisição do tipo `POST` para a rota `/users/` sem o campo "username".', () => {
+      it('Espera no corpo da resposta STATUS 400 ', async () => {
+      chaiHttpResponse = await chai.request(app).post('/users').send(requestValidateName);
+       expect(chaiHttpResponse.status).to.be.equal(400);
+     });
+      it('Espera um erro com a seguinte mensagem "All fields must be filled".',async () => {
+        chaiHttpResponse = await chai.request(app).post('/users').send(requestValidateName);
+        expect(chaiHttpResponse.body).to.haveOwnProperty('message')
+        .to.be.eq("All fields must be filled");
+      });
     });
-    
-    after(() => {
-      (Users.findByPk as sinon.SinonStub).restore();
-    });
-    
-    it('Espera no corpo da resposta STATUS 200', async () => {
-     chaiHttpResponse = await chai.request(app).get('/users/2');
-     expect(chaiHttpResponse.status).to.be.equal(200);
-   });
-   
-  it('Espera que tenha os campos id, username e email', async () => {
-    chaiHttpResponse = await chai.request(app).get('/users/1');
-    expect(chaiHttpResponse.body).to.have.own.property('id');
-    expect(chaiHttpResponse.body).to.have.own.property('username');
-    expect(chaiHttpResponse.body).to.have.own.property('email');
-    expect(chaiHttpResponse.body).not.have.own.property('password');
-  });
- });
 
- describe('3- Requisição do tipo `GET` para a rota `/users/id` com um ID inválido.', async () => {
-    
-  before(async () => sinon
-    .stub(Users, 'findByPk')
-    .resolves(null));
-  
-  after(() => {
-    (Users.findByPk as sinon.SinonStub).restore();
-  });
-  
-  it('Espera no corpo da resposta STATUS 404', async () => {
-   chaiHttpResponse = await chai.request(app).get('/users/34');
-   expect(chaiHttpResponse.status).to.be.equal(404);
- });
- 
-  it('Espera que retorne a mensagem "No user in data base or invalid ID"', async () => {
-    chaiHttpResponse = await chai.request(app).get('/users/156');
-    expect(chaiHttpResponse.body).to.haveOwnProperty('message')
-      .to.be.eq('No user in data base or invalid ID'); 
+    describe('Requisição do tipo `POST` para a rota `/users/` sem o campo "email".', () => {
+      it('Espera no corpo da resposta STATUS 400 ', async () => {
+      chaiHttpResponse = await chai.request(app).post('/users').send(requestValidateEmail);
+        expect(chaiHttpResponse.status).to.be.equal(400);
+      });
+      it('Espera um erro com a seguinte mensagem "All fields must be filled"""email" is required".',async () => {
+        chaiHttpResponse = await chai.request(app).post('/users').send(requestValidateEmail);
+        expect(chaiHttpResponse.body).to.haveOwnProperty('message')
+        .to.be.eq("All fields must be filled");
+      });
     });
+
+    describe('Requisição do tipo `POST` para a rota `/users/` sem o campo "password".', () => {
+      it('Espera no corpo da resposta STATUS 400 ', async () => {
+      chaiHttpResponse = await chai.request(app).post('/users').send(requestValidatePassword);
+        expect(chaiHttpResponse.status).to.be.equal(400);
+      });
+      it('Espera um erro com a seguinte mensagem "All fields must be filled".',async () => {
+        chaiHttpResponse = await chai.request(app).post('/users').send(requestValidatePassword);
+        expect(chaiHttpResponse.body).to.haveOwnProperty('message')
+        .to.be.eq("All fields must be filled");
+      });
+    });    
   });
+
 //   describe('3 - Criando um novo contato através da rota `/Userss` fazendo requisição do tipo `POST` será testado as seguintes validações.', () => {
 //     before(async () => {
 //       sinon
