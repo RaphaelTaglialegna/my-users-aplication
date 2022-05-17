@@ -4,7 +4,7 @@ import * as Joi from 'joi';
 const velueRequired = '400|All fields must be filled';
 
 const userSchema = Joi.object({
-  user: Joi.string().required().messages({
+  username: Joi.string().required().messages({
     'any.required': velueRequired,
     'string.empty': velueRequired,
   }),
@@ -23,7 +23,7 @@ const userSchema = Joi.object({
 
 const ValidateUser = (req: Request, res: Response, next: NextFunction) => {
   const {username, email, password } = req.body;
-  const message = userSchema.validate({ email, password });
+  const message = userSchema.validate({ username, email, password });
   if (message.error) {
     const [status, error] = message.error.message.split('|');
     const STATUSCODE: number = +status;

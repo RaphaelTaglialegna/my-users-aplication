@@ -7,7 +7,7 @@ const userController = new UserController();
 
 routerUsers.get('/', userController.getAll);
 routerUsers.get('/:id', userController.getById);
-routerUsers.post('/', ValidateUser);
+routerUsers.post('/', ValidateUser, userController.createUser);
 
 
 

@@ -21,15 +21,14 @@ const { expect } = chai;
 
 const ID = 3 as number;
 
-
 describe('Testes de Integração da API Users Requisições do Tipo POST', () => {
   let chaiHttpResponse: Response;
 
-  describe('1- Requisição do tipo `POST` para a rota `/users` para cadastrar um usário com sucesso.', () => {
-    before(async () => sinon
+  describe('1- Requisição do tipo `POST` para a rota `/users` para cadastrar um usuário com sucesso.', () => {
+    sinon
       .stub(Users, 'create')
-      .resolves( ID  as unknown as Users));
-    
+      .resolves({ id: ID } as unknown as Users);
+
     after(() => {
       (Users.create as sinon.SinonStub).restore();
     });
@@ -42,8 +41,9 @@ describe('Testes de Integração da API Users Requisições do Tipo POST', () =>
     
     it('Espera um retorno do usuário cadastrado e seu respectivo ID".', async () => {
       chaiHttpResponse = await chai.request(app).post('/users').send(requestUserValid);
-      
-      (chaiHttpResponse.body).to.be.an('object').deep.equal({ id: ID, ...requestUserValid});
+      const { username, email } = requestUserValid;
+      console.log(chaiHttpResponse.body);
+      expect(chaiHttpResponse.body).to.be.an('object').deep.equal({ id: ID, username, email });
     }); 
     
   });

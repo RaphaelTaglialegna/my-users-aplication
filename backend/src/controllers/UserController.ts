@@ -8,12 +8,12 @@ export default class UserController {
       const usersData = await UserService.getAll();
       
       if (usersData !== null) {
-        res.status(StatusCodes.OK).json(usersData);
+        return res.status(StatusCodes.OK).json(usersData);
       } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ message: 'No users in data base' });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'No users in data base' });
       }      
     } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
   };
 
@@ -23,12 +23,24 @@ export default class UserController {
       const usersData = await UserService.getById(parseInt(id, 10));
       
       if (usersData !== null) {
-        res.status(StatusCodes.OK).json(usersData);
+        return res.status(StatusCodes.OK).json(usersData);
       } else {
-        res.status(StatusCodes.NOT_FOUND).json({ message: 'No user in data base or invalid ID' });
+        return res.status(StatusCodes.NOT_FOUND).json({ message: 'No user in data base or invalid ID' });
       }      
     } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
+    }
+  };
+
+  public createUser = async (req: Request, res: Response) => {
+    try {
+      const { username, email, password } = req.body;
+      const id = await UserService.createUser( username, email, password );
+      
+       return res.status(StatusCodes.CREATED).json({id, username, email});
+         
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
   };
 }
