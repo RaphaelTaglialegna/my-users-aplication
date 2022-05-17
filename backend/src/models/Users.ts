@@ -22,12 +22,11 @@ User.init(
     username: {
       type: STRING,
       allowNull: false,
-      unique: true,
+      field: 'user_name',
     },
     email: {
       type: STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: false, 
     },
     password: {
       type: STRING,

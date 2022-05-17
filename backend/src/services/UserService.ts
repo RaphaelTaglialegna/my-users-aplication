@@ -8,7 +8,12 @@ class UserService{
   }
 
   public getAll = async():Promise<User[]> => {
-    const result = await this.modelUser.findAll();
+    const result = await this.modelUser.findAll({attributes: {exclude: ['password']}});
+    return result;
+  } 
+
+  public getById = async(id: number):Promise<User | null> => {
+    const result = await this.modelUser.findByPk(id, {attributes: {exclude: ['password']}});
     return result;
   }  
 }

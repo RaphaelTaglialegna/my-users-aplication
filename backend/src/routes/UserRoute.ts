@@ -5,5 +5,7 @@ const routerUsers = express.Router();
 const userController = new UserController();
 
 routerUsers.get('/', userController.getAll);
+routerUsers.get('/:id', userController.getById);
+
 
 export default routerUsers;
