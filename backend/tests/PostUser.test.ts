@@ -25,9 +25,11 @@ describe('Testes de Integração da API Users Requisições do Tipo POST', () =>
   let chaiHttpResponse: Response;
 
   describe('1- Requisição do tipo `POST` para a rota `/users` para cadastrar um usuário com sucesso.', () => {
-    sinon
+    before(async () => {  
+      sinon
       .stub(Users, 'create')
       .resolves({ id: ID } as unknown as Users);
+    });
 
     after(() => {
       (Users.create as sinon.SinonStub).restore();
@@ -42,7 +44,6 @@ describe('Testes de Integração da API Users Requisições do Tipo POST', () =>
     it('Espera um retorno do usuário cadastrado e seu respectivo ID".', async () => {
       chaiHttpResponse = await chai.request(app).post('/users').send(requestUserValid);
       const { username, email } = requestUserValid;
-      console.log(chaiHttpResponse.body);
       expect(chaiHttpResponse.body).to.be.an('object').deep.equal({ id: ID, username, email });
     }); 
     
@@ -85,94 +86,4 @@ describe('Testes de Integração da API Users Requisições do Tipo POST', () =>
       });
     });    
   });
-
-//   describe('3 - Criando um novo contato através da rota `/Userss` fazendo requisição do tipo `POST` será testado as seguintes validações.', () => {
-//     before(async () => {
-//       sinon
-//         .stub(Users, 'create')
-//         .resolves({
-//           id: 3,
-//           firstName: 'Robert',
-//           lastName: 'Mattos',
-//           cpf: '00000000536',
-//       });
-//       sinon
-//         .stub(Phone, 'create')
-//         .resolves({
-//           id: 3,
-//           phone: '19912345659',
-//       });
-//       sinon
-//       .stub(Email, 'create')
-//       .resolves({
-//         id: 3,
-//         email: 'mattos@gmail.com',
-//     });
-//     });
-    
-//     after(() => {
-//       (Users.create).restore();
-//       (Phone.create).restore();
-//       (Email.create).restore();
-//     });
-
-//     describe('Fazendo a requisição sem o campo firstName', () => {
-//       it('Espera no corpo da resposta STATUS 400', async () => {
-//         chaiHttpResponse = await chai.request(app).post('/Userss').send({        
-//           lastName: 'Mattos',
-//           cpf: '00000000536',
-//           emails: [{ email: 'mattos@gmail.com' }],
-//           phones: [{ phone: '19912345659' }],
-//       });
-//         expect(chaiHttpResponse.status).to.be.equal(400);
-//       });
-//       it('Espera um erro com a seguinte mensagem ""firstName" is required".', () => {
-//         expect(chaiHttpResponse.body).to.haveOwnProperty('message')
-//         .to.be.eq('"firstName" is required');
-//       });    
-//     });
-
-//     describe('Fazendo a requisição sem o campo lastName', () => {
-//       it('Espera no corpo da resposta STATUS 400', async () => {
-//       chaiHttpResponse = await chai.request(app).post('/Userss').send({        
-//         firstName: 'Robert',
-//         cpf: '00000000536',
-//         emails: [{ email: 'mattos@gmail.com' }],
-//         phones: [{ phone: '19912345659' }],
-//     });
-//       expect(chaiHttpResponse.status).to.be.equal(400);
-//     });
-//       it('Espera um erro com a seguinte mensagem ""lastName" is required".', () => {
-//         expect(chaiHttpResponse.body).to.haveOwnProperty('message')
-//         .to.be.eq('"lastName" is required');
-//       });      
-//     });
-
-//     describe('Fazendo a requisição sem o campo phone', () => {
-//       it('Espera no corpo da resposta STATUS 400', async () => {
-//       chaiHttpResponse = await chai.request(app).post('/Userss').send({        
-//         firstName: 'Robert',
-//         lastName: 'Mattos',
-//         cpf: '00000000536',
-//         emails: [{ email: 'mattos@gmail.com' }],
-//         phones: [{}],
-//     });
-//       expect(chaiHttpResponse.status).to.be.equal(400);
-//     });
-//       it('Espera um erro com a seguinte mensagem ""phones[0].phone" is required".', () => {
-//         expect(chaiHttpResponse.body).to.haveOwnProperty('message')
-//         .to.be.eq('"phones[0].phone" is required');
-//       });      
-//     });
-
-//     describe('Cadastrando um usuário válido', () => {
-//       it('Espera no corpo da resposta STATUS 201', async () => {
-//       chaiHttpResponse = await chai.request(app).post('/Userss').send(VALIDUsers);
-//       expect(chaiHttpResponse.status).to.be.equal(201);
-//     });
-//       it('Espera um retorno do usuário cadastrado e seu respectivo ID".', () => {
-//         expect(chaiHttpResponse.body).to.be.an('object').deep.equal({ id: 3, ...VALIDUsers });
-//       });      
-//     });
-//   });
 });
