@@ -2,9 +2,9 @@ import axios from 'axios';
 import * as React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { IoMdPersonAdd } from 'react-icons/io';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import UserContext, { API_URL } from '../context/user/context';
+import UserContext from '../context/user/context';
 
 type Props = {}
 
@@ -16,9 +16,6 @@ export const FormAdd = (props: Props) => {
     email:'',
     password:'',
   });
-
- 
-
  
   const handleState = async () => {
     addUsers(userData);

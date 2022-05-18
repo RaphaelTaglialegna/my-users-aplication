@@ -1,18 +1,17 @@
 import * as React from 'react';
 import axios from 'axios';
 import { Button, Table } from 'react-bootstrap';
-import { FaTrashAlt, FaUserEdit } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 import { FormAdd } from './FormAdd';
 import UserContext, { API_URL } from '../context/user/context';
 import { toast } from 'react-toastify';
+import ButtonModal  from './FormPutModal';
 
 type Props = {}
 
 export const TableUsers = (props: Props) => {
   const { stateUser, setStateUser } = React.useContext(UserContext)
-
   const [users, setUsers] = React.useState([]);
-  const [modalOpen, setModalOpen] = React.useState(false);
 
   
   React.useEffect(() => { 
@@ -52,14 +51,13 @@ export const TableUsers = (props: Props) => {
               <td>{username}</td>
               <td>{email}</td>
               <td>
-                <Button
-                  onClick={() => {setModalOpen(true)}}
-                >
-                <FaUserEdit />
-                </Button>
+                <ButtonModal 
+                id = {id}
+                username = {username}
+                email = {email}
+                />                                
               </td>
-              {modalOpen && <FormAdd />}
-
+              
               <td>
                 <Button 
                   variant="danger"
