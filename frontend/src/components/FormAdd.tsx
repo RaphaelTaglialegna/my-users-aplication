@@ -1,33 +1,34 @@
-import { wait } from '@testing-library/user-event/dist/utils';
 import axios from 'axios';
 import * as React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UserContext, { API_URL } from '../context/user/context';
 
 type Props = {}
-const API_URL = "http://localhost:3001/users";
+
 
 export const FormAdd = (props: Props) => {
+  const { setStateUser, addUsers } = React.useContext(UserContext)
   const [userData, setUserData] = React.useState({
     username:'',
     email:'',
     password:'',
   });
 
-  const addUsers = async () => { 
-   await axios.post(API_URL, {...userData})
-    .then((response) =>{
-        toast.success(response.statusText);
-        setUserData({ 
-          username:'',
-          email:'',
-          password:'',
-        });
-     }) 
-   .catch((err) =>  toast.error(err.response.data.message, { icon: false }));  
-  };  
+ 
+
+ 
+  const handleState = async () => {
+    addUsers(userData);
+    setStateUser({ ...userData });
+    setUserData({
+      username:'',
+      email:'',
+      password:'',
+    })
+  };
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
@@ -71,7 +72,7 @@ export const FormAdd = (props: Props) => {
           <Col>
           <Button 
           type='button'
-          onClick={() => addUsers()}
+          onClick={() => handleState()}
           variant="success"
           ><IoMdPersonAdd /> Add User</Button>
           </Col>

@@ -1,12 +1,16 @@
 import React from 'react';
 import './App.css';
 import { ApiUser } from './components/apiUser';
+import { UserContextProvider } from './context/user/context';
 
-function App() {
+export const App = () => {
+
   return (
-    <div className="App">
-      <ApiUser />
-    </div>
+    <UserContextProvider>
+      <div className="App">
+        <ApiUser />
+      </div>
+    </UserContextProvider>
   );
 }
 
