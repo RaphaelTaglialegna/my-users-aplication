@@ -1,7 +1,5 @@
 import * as React from 'react';
 import axios from 'axios';
-import { Button, Table } from 'react-bootstrap';
-import { FaTrashAlt, FaUserEdit } from 'react-icons/fa';
 
 type Props = {}
 
