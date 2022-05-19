@@ -1,5 +1,4 @@
 import * as React from 'react';
-import axios from 'axios';
 
 type Props = {
   limit: number;
@@ -12,43 +11,53 @@ const MAX_ITEMS = 9;
 const MAX_LEFT = (MAX_ITEMS - 1) / 2;
 
 export const NavPagination: React.FC<Props> = ({ limit, total, offset, setOffset}) => {
-const currentPage = offset ? (offset / limit) + 1 : 1;
+const currentPage = offset ? offset : 1;
 const pages = Math.ceil(total / limit);
 const firstPage = Math.max(currentPage - MAX_LEFT, 1);
+
+
+const onPageChange = (page: number) => { 
+  setOffset(page - 1)
+}
 
   return (
     <nav aria-label="Page navigation" className='d-flex justify-content-center'>
       <ul className="pagination">
+      <li className="page-item">
+          <button 
+          className="page-link" 
+          onClick={() => onPageChange(currentPage -1)} 
+          aria-label="Previous"
+          disabled={currentPage === 1}
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </button>
+        </li>
         {
-          Array.from({length: MAX_ITEMS })
+          Array.from({length: Math.min(MAX_ITEMS, pages) })
             .map((_, index) => index + firstPage)
             .map((page) => (
               <li key={page} className="page-item">
                 <button
                   className="page-link" 
-                  onClick={() => setOffset((page -1) * limit)}
+                  onClick={() => onPageChange(page)}
               >
                 {page}
                 </button>
               </li>
             ))
         }
-
+        <li className="page-item">
+          <button 
+          className="page-link" 
+          onClick={() => onPageChange(currentPage + 1)}  
+          aria-label="Next"
+          disabled={currentPage === pages}
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </button>
+        </li>
       </ul>
     </nav>     
   )
 }
-
-{/* <li className="page-item">
-          <a className="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li className="page-item"><a className="page-link" href="#">1</a></li>
-        <li className="page-item"><a className="page-link" href="#">2</a></li>
-        <li className="page-item"><a className="page-link" href="#">3</a></li>
-        <li className="page-item">
-          <a className="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li> */}
