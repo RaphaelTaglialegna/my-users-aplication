@@ -9,8 +9,11 @@ class UserService{
     this.modelUser = User;
   }
 
-  public getAll = async():Promise<User[]> => {
-    const result = await this.modelUser.findAll({attributes: {exclude: ['password']}});
+  public getAll = async(page: number, size: number):Promise<User[] | any> => {
+    const result = await this.modelUser.findAndCountAll({
+      limit: size,
+      offset: page * size,
+      attributes: {exclude: ['password']}});
     return result;
   } 
 

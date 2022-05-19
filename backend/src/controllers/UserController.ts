@@ -4,9 +4,23 @@ import { send } from 'process';
 import UserService from '../services/UserService';
 export default class UserController {
   
-  public getAll = async (_req: Request, res: Response) => {
+  public getAll = async (req: Request, res: Response) => {
     try {
-      const usersData = await UserService.getAll();
+      const pageAsNumber = Number.parseInt(req.query.page as any);
+      const sizeAsNumber = Number.parseInt(req.query.size as any);
+
+      let page: number = 0;
+      if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0) { 
+        page = pageAsNumber
+      };
+      
+      let size: number = 10;
+      if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) { 
+        size = sizeAsNumber
+      } 
+
+
+      const usersData = await UserService.getAll(page, size);
       
       if (usersData !== null) {
         return res.status(StatusCodes.OK).json(usersData);

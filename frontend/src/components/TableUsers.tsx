@@ -6,18 +6,24 @@ import { FormAdd } from './FormAdd';
 import UserContext, { API_URL } from '../context/user/context';
 import { toast } from 'react-toastify';
 import ButtonModal  from './FormPutModal';
+import { NavPagination } from './NavPaginations';
 
 type Props = {}
+
+const LIMIT = 9
 
 export const TableUsers = (props: Props) => {
   const { stateUser, setStateUser } = React.useContext(UserContext)
   const [users, setUsers] = React.useState([]);
+  const [ count, setCout ] = React.useState(0);
+  const [offset, setOffset] = React. useState(0);
 
   
   React.useEffect(() => { 
     axios.get('http://localhost:3001/users')
       .then(response => {
         setUsers(response.data);
+        console.log(response);
       }).catch(error => console.log(error.response.data))
   }, [stateUser]);
 
@@ -34,7 +40,8 @@ export const TableUsers = (props: Props) => {
     .catch((err) =>  toast.error(err.response.data.message, { icon: false }));  
    };  
   
-  return (     
+  return ( 
+    <>
       <Table>
         <thead>
           <tr>
@@ -46,7 +53,7 @@ export const TableUsers = (props: Props) => {
         </thead>
         <tbody>
           {
-          users.map(({id, username, email}) => 
+            users.map(({id, username, email}) => 
             <tr key={id}>  
               <td>{username}</td>
               <td>{email}</td>
@@ -63,13 +70,20 @@ export const TableUsers = (props: Props) => {
                   variant="danger"
                   type='button'
                   onClick={ () => deleteUser(id)}
-                >
+                  >
                   <FaTrashAlt />
                 </Button>
               </td>
             </tr>            
           )}
         </tbody>
-      </Table>  
+      </Table>
+      <NavPagination  
+        limit={LIMIT} 
+        offset={offset} 
+        total={count}
+        setOffset={setOffset}
+      />  
+    </>    
   )
 }
